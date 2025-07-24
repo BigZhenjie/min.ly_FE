@@ -34,7 +34,23 @@ const QueryBox = () => {
       );
       setLoading(false);
     } catch (error) {
-      setError(error.response.data.error);
+      if (
+        error &&
+        typeof error === "object" &&
+        "response" in error &&
+        error.response &&
+        typeof error.response === "object" &&
+        "data" in error.response &&
+        error.response.data &&
+        typeof error.response.data === "object" &&
+        "error" in error.response.data
+      ) {
+        setError((error as any).response.data.error);
+      } else if (error instanceof Error) {
+        setError(error.message);
+      } else {
+        setError(String(error));
+      }
       setLoading(false);
     }
   };
